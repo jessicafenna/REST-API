@@ -16,6 +16,8 @@ exports.createUser = async (req, res) =>{
     }
 }
 
+
+//in thunderclient remember you need to change type of request (following is a delete not post etc)
 exports.deleteUser = async (req, res) => { 
     try{
         await User.deleteOne(req.params.username)
@@ -26,18 +28,20 @@ exports.deleteUser = async (req, res) => {
         res.send({error});
     }} 
 
+//note to self - the update function wasn't working for ages, killed server and it worked again 
 exports.updateUser = async (req, res) => { 
     try{ 
         const userObj = { 
             username: req.body.username,
             updatedUsername: req.body.updatedUsername
         }; 
-        const newUser = await User.findOneAndUpdate({
-            username:req.params.username
+        console.log(userObj);
+        let response = await User.findOneAndUpdate({
+            username:userObj.username
             
         }, {
             $set: {
-                username: req.body.updatedUsername
+                username: userObj.updatedUsername
             }
             
         }, { 
@@ -45,7 +49,7 @@ exports.updateUser = async (req, res) => {
         })
         await User.findOne({username:userObj.updatedUsername})
         //send the data back 
-        res.json(newUser);
+        res.json(response);
         
     } catch (error){ 
         console.log(error);
