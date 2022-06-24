@@ -34,16 +34,19 @@ exports.updateUser = async (req, res) => {
         }; 
         const newUser = await User.findOneAndUpdate({
             username:req.params.username
+            
         }, {
             $set: {
                 username: req.body.updatedUsername
             }
-            res.json(updateUser);
-        }, { 
-            new: true
             
-        }
-        )
+        }, { 
+            new: true 
+        })
+        await User.findOne({username:userObj.updatedUsername})
+        //send the data back 
+        res.json(newUser);
+        
     } catch (error){ 
         console.log(error);
         res.send({error});
